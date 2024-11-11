@@ -591,27 +591,39 @@ async function handleLike(commentId, likeButton) {
         return;
     }
 
-    const commentRef = doc(db, "comments", commentId);
-    const commentDoc = await getDoc(commentRef);
-    const likes = commentDoc.data().likes || [];
-    const userId = user.uid;
-
     try {
+        const commentRef = doc(db, "comments", commentId);
+        const commentDoc = await getDoc(commentRef);
+        
+        // Add check to ensure the comment exists
+        if (!commentDoc.exists()) {
+            console.error("Comment not found");
+            return;
+        }
+
+        const likes = commentDoc.data().likes || [];
+        const userId = user.uid;
+
         if (likes.includes(userId)) {
             await updateDoc(commentRef, {
                 likes: arrayRemove(userId)
             });
             likeButton.classList.remove('liked');
-            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${likes.length - 1}`;
         } else {
             await updateDoc(commentRef, {
                 likes: arrayUnion(userId)
             });
             likeButton.classList.add('liked');
-            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${likes.length + 1}`;
         }
+
+        // Update like count after the operation
+        const updatedDoc = await getDoc(commentRef);
+        const updatedLikes = updatedDoc.data().likes || [];
+        likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${updatedLikes.length}`;
+
     } catch (error) {
         console.error("Error updating like: ", error);
+        alert("Error updating like. Please try again.");
     }
 }
 
