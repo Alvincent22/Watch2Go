@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Joker",
             poster: "movies/Joker.jpg",
             trailer: "TrailerVids/joker-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-joker-hd-9766.5392645",
             info: [
                 { label: "Release Date", value: "October 4, 2019" },
                 { label: "Director", value: "Todd Phillips" },
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Despicable Me",
             poster: "movies/despicable.jpg",
             trailer: "TrailerVids/despicableme-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-despicable-me-hd-19486.5349256",
             info: [
                 { label: "Release Date", value: "July 9, 2010" },
                 { label: "Directors", value: "Pierre Coffin, Chris Renaud" },
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Interstellar",
             poster: "movies/interstellar.jpg",
             trailer: "TrailerVids/interstellar-trailer.mp4",
+            watchLink: "https://sflix.to/movie/free-interstellar-hd-19788",
             info: [
                 { label: "Release Date", value: "November 7, 2014" },
                 { label: "Director", value: "Christopher Nolan" },
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Jumanji: Welcome to the Jungle",
             poster: "movies/jumanji.jpg",
             trailer: "TrailerVids/jumanji-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-jumanji-welcome-to-the-jungle-hd-19299.5298103",
             info: [
                 { label: "Release Date", value: "December 20, 2017" },
                 { label: "Director", value: "Jake Kasdan" },
@@ -68,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Transformers: One",
             poster: "movies/transformersone.jpg",
             trailer: "TrailerVids/transformers-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-transformers-one-hd-114058.10682158",
             info: [
                 { label: "Release Date", value: "September 13, 2024" },
                 { label: "Director", value: "Josh Cooley" },
@@ -84,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "The Last of Us",
             poster: "movies/the last of us.jpg",
             trailer: "TrailerVids/thelastofus-trailer.mp4",
+            watchLink: "https://sflix.to/tv/free-the-last-of-us-hd-92254",
             info: [
                 { label: "Release Date", value: "January 15, 2023" },
                 { label: "Creators", value: "Craig Mazin, Neil Druckmann" },
@@ -100,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "A Quiet Place",
             poster: "movies/aquietplace.jpg",
             trailer: "TrailerVids/aquietplace-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-a-quiet-place-hd-19740.5297305",
             info: [
                 { label: "Release Date", value: "April 6, 2018" },
                 { label: "Director", value: "John Krasinski" },
@@ -116,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "The Avengers",
             poster: "movies/avengers.jpg",
             trailer: "TrailerVids/avengers-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-the-avengers-hd-19782.5297293",
             info: [
                 { label: "Release Date", value: "May 4, 2012" },
                 { label: "Director", value: "Joss Whedon" },
@@ -132,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Inside Out 2",
             poster: "movies/InsideOut2.jpg",
             trailer: "TrailerVids/insideout-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-inside-out-2-hd-110170.10515250",
             info: [
                 { label: "Release Date", value: "June 14, 2024" },
                 { label: "Director", value: "Kelsey Mann" },
@@ -149,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Spider-Man: Far From Home",
             poster: "movies/spiderman.jpg",
             trailer: "TrailerVids/spiderman-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-spiderman-far-from-home-hd-17240.5389384",
             info: [
                 { label: "Release Date", value: "July 2, 2019" },
                 { label: "Director", value: "Jon Watts" },
@@ -165,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Deadpool & Wolverine",
             poster: "movies/wolverine&pool.jpg",
             trailer: "TrailerVids/deadpoolwolverine-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-deadpool-wolverine-hd-111016.10587811",
             info: [
                 { label: "Release Date", value: "July 26, 2024" },
                 { label: "Director", value: "Shawn Levy" },
@@ -181,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Inception",
             poster: "movies/inception.jpg",
             trailer: "TrailerVids/inception-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-inception-hd-19764.5297266",
             info: [
                 { label: "Release Date", value: "July 16, 2010" },
                 { label: "Director", value: "Christopher Nolan" },
@@ -197,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Free Guy",
             poster: "movies/freeguy.jpg",
             trailer: "TrailerVids/freeguy-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-free-guy-hd-66987.4820914",
             info: [
                 { label: "Release Date", value: "August 13, 2021" },
                 { label: "Director", value: "Shawn Levy" },
@@ -213,6 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "1917",
             poster: "movies/1917.jpg",
             trailer: "TrailerVids/1917-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-1917-hd-41773.5417827",
             info: [
                 { label: "Release Date", value: "December 25, 2019" },
                 { label: "Director", value: "Sam Mendes" },
@@ -229,6 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Aquaman",
             poster: "movies/aquaman.jpg",
             trailer: "TrailerVids/aquaman-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-aquaman-hd-19837.5297155",
             info: [
                 { label: "Release Date", value: "December 21, 2018" },
                 { label: "Director", value: "James Wan" },
@@ -245,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Godzilla: King of the Monsters",
             poster: "movies/godzilla.jpg",
             trailer: "TrailerVids/godzilla-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-godzilla-king-of-the-monsters-hd-7843.5384293",
             info: [
                 { label: "Release Date", value: "May 31, 2019" },
                 { label: "Director", value: "Michael Dougherty" },
@@ -261,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Oppenheimer",
             poster: "movies/oppenheimer.jpg",
             trailer: "TrailerVids/oppenheimer-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-oppenheimer-hd-98446.9759013",
             info: [
                 { label: "Release Date", value: "July 21, 2023" },
                 { label: "Director", value: "Christopher Nolan" },
@@ -277,6 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "The Meg",
             poster: "movies/themeg.jpg",
             trailer: "TrailerVids/themeg-trailer.mp4",
+            watchLink: "https://sflix.to/watch-movie/free-the-meg-hd-19787.5297269",
             info: [
                 { label: "Release Date", value: "August 10, 2018" },
                 { label: "Director", value: "Jon Turteltaub" },
@@ -306,6 +324,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const moviePlot = document.getElementById('movie-plot');
         moviePlot.innerHTML = movie.plot.map(paragraph => `<p>${paragraph}</p>`).join('');
+
+        document.querySelector('.watch-movie-button').href = movie.watchLink;
     }
 
     const urlParams = new URLSearchParams(window.location.search);

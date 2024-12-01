@@ -1,7 +1,7 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, browserLocalPersistence, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, arrayUnion, arrayRemove, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 //Firebase configuration
 const firebaseConfig = {
@@ -17,9 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-auth.setPersistence(browserLocalPersistence);
 const googleProvider = new GoogleAuthProvider();
 const db = getFirestore(app);
+const storage = getStorage(app);
+auth.setPersistence(browserLocalPersistence);
 
 function displayMessage(elementId, message, isError = false) {
     const messageElement = document.getElementById(elementId);
@@ -38,12 +39,14 @@ loginSubmit.addEventListener("click", function (event) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            displayMessage('loginMessage', 'Logged in successfully!');
+            alert('Logged in successfully!');
+            window.location.reload();
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
+            setTimeout(() => {
+            }, 1500);
         })
         .catch((error) => {
-            console.log("Firebase error code:", error.code); // For debugging
             let errorMessage;
             switch (error.code) {
                 case 'auth/invalid-email':
@@ -127,6 +130,7 @@ function handleGoogleSignIn() {
         .then((result) => {
             const user = result.user;
             displayMessage('loginMessage', 'Logged in with Google successfully!');
+            window.location.reload();
             document.getElementById('signupMessage').textContent = '';
             document.getElementById('authForms').style.display = 'none';
             document.getElementById('userProfile').style.display = 'block';
@@ -171,6 +175,7 @@ auth.onAuthStateChanged((user) => {
         if (authForms) authForms.style.display = 'none';
         if (userProfile) userProfile.style.display = 'block';
         if (userName) userName.textContent = user.email.split('@')[0];
+        loadProfilePicture(user);
         setTimeout(() => {
             const sidebar = document.getElementById('sidebar');
             if (sidebar) sidebar.classList.remove('open');
@@ -209,6 +214,7 @@ document.addEventListener('click', async function (event) {
                     timestamp: new Date(),
                     movieId: movieId,
                     likes: [],
+                    userPhotoURL: user.photoURL || null
                 };
 
                 try {
@@ -225,7 +231,10 @@ document.addEventListener('click', async function (event) {
                     commentDiv.innerHTML = `
                         <div class="comment-user">
                             <div class="user-icon">
-                                <i class="fa-solid fa-user"></i>
+                                ${user.photoURL ? 
+                                    `<img src="${user.photoURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` :
+                                    `<i class="fa-solid fa-user"></i>`
+                                }
                             </div>
                             <span class="username">${newComment.username}</span>
                             <span class="time-ago" style="color: gray;">${newComment.timestamp.toLocaleString()}</span>
@@ -348,7 +357,10 @@ async function displayComments(movieId) {
             commentDiv.innerHTML = `
                 <div class="comment-user">
                     <div class="user-icon">
-                        <i class="fa-solid fa-user"></i>
+                        ${comment.userPhotoURL ? 
+                            `<img src="${comment.userPhotoURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` :
+                            `<i class="fa-solid fa-user"></i>`
+                        }
                     </div>
                     <span class="username">${comment.username}</span>
                     <span class="time-ago" style="color: gray;">${comment.timestamp.toDate().toLocaleString()}</span>
@@ -451,7 +463,8 @@ async function handleReply(parentCommentId, replyText, repliesDiv) {
         timestamp: new Date(),
         parentCommentId: parentCommentId,
         likes: [],
-        movieId: new URLSearchParams(window.location.search).get('movie')
+        movieId: new URLSearchParams(window.location.search).get('movie'),
+        userPhotoURL: user.photoURL || null
     };
 
     try {
@@ -464,7 +477,10 @@ async function handleReply(parentCommentId, replyText, repliesDiv) {
         replyDiv.innerHTML = `
             <div class="comment-user">
                 <div class="user-icon">
-                    <i class="fa-solid fa-user"></i>
+                    ${user.photoURL ? 
+                        `<img src="${user.photoURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` :
+                        `<i class="fa-solid fa-user"></i>`
+                    }
                 </div>
                 <span class="username">${newReply.username}</span>
                 <span class="time-ago" style="color: gray;">${newReply.timestamp.toLocaleString()}</span>
@@ -543,7 +559,10 @@ async function displayReply(reply, repliesDiv, replyId) {
     replyDiv.innerHTML = `
         <div class="comment-user">
             <div class="user-icon">
-                <i class="fa-solid fa-user"></i>
+                ${reply.userPhotoURL ? 
+                    `<img src="${reply.userPhotoURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` :
+                    `<i class="fa-solid fa-user"></i>`
+                }
             </div>
             <span class="username">${reply.username}</span>
             <span class="time-ago" style="color: gray;">${reply.timestamp.toDate().toLocaleString()}</span>
@@ -591,27 +610,39 @@ async function handleLike(commentId, likeButton) {
         return;
     }
 
-    const commentRef = doc(db, "comments", commentId);
-    const commentDoc = await getDoc(commentRef);
-    const likes = commentDoc.data().likes || [];
-    const userId = user.uid;
-
     try {
+        const commentRef = doc(db, "comments", commentId);
+        const commentDoc = await getDoc(commentRef);
+        
+        // Add check to ensure the comment exists
+        if (!commentDoc.exists()) {
+            console.error("Comment not found");
+            return;
+        }
+
+        const likes = commentDoc.data().likes || [];
+        const userId = user.uid;
+
         if (likes.includes(userId)) {
             await updateDoc(commentRef, {
                 likes: arrayRemove(userId)
             });
             likeButton.classList.remove('liked');
-            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${likes.length - 1}`;
         } else {
             await updateDoc(commentRef, {
                 likes: arrayUnion(userId)
             });
             likeButton.classList.add('liked');
-            likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${likes.length + 1}`;
         }
+
+        // Update like count after the operation
+        const updatedDoc = await getDoc(commentRef);
+        const updatedLikes = updatedDoc.data().likes || [];
+        likeButton.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> ${updatedLikes.length}`;
+
     } catch (error) {
         console.error("Error updating like: ", error);
+        alert("Error updating like. Please try again.");
     }
 }
 
@@ -762,3 +793,127 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Add this event listener for avatar upload
+document.addEventListener('change', async function(event) {
+    if (event.target.id === 'avatarUpload') {
+        const user = auth.currentUser;
+        if (!user) {
+            alert('Please login to upload a profile picture');
+            return;
+        }
+
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Check file type and size
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            alert('Please upload an image smaller than 5MB');
+            return;
+        }
+
+        try {
+            // Show loading state
+            const avatarIcon = document.querySelector('.profile-avatar i');
+            const originalIcon = avatarIcon ? avatarIcon.className : '';
+            if (avatarIcon) avatarIcon.className = 'fas fa-spinner fa-spin';    
+
+            // Create a reference to the file location with user ID in filename
+            const fileName = `${user.uid}_${new Date().getTime()}.${file.name.split('.').pop()}`;
+            const storageRef = ref(storage, `profilePictures/${fileName}`);
+
+            // Upload the file with metadata
+            const metadata = {
+                contentType: file.type,
+            };
+            
+            console.log('Starting upload...'); // Debug log
+            const uploadTask = await uploadBytes(storageRef, file, metadata);
+            console.log('Upload successful:', uploadTask);
+
+            // Get the download URL
+            const downloadURL = await getDownloadURL(storageRef);
+            console.log('Download URL:', downloadURL);
+
+            // Update user's profile
+            await updateProfile(user, {
+                photoURL: downloadURL
+            });
+
+            // Add this new code to update all comments and replies
+            const username = user.email.split('@')[0];
+            const commentsRef = collection(db, "comments");
+            const userComments = await getDocs(commentsRef);
+
+            // Update all comments by this user
+            userComments.forEach(async (doc) => {
+                const comment = doc.data();
+                if (comment.username === username) {
+                    await updateDoc(doc.ref, {
+                        userPhotoURL: downloadURL
+                    });
+                }
+            });
+
+            // Update UI for all visible comments and replies
+            const allUserIcons = document.querySelectorAll(`.comment-user .user-icon`);
+            allUserIcons.forEach(icon => {
+                const usernameElement = icon.parentElement.querySelector('.username');
+                if (usernameElement && usernameElement.textContent === username) {
+                    icon.innerHTML = `<img src="${downloadURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                }
+            });
+
+            // Update the avatar display
+            const profileAvatar = document.querySelector('.profile-avatar');
+            if (profileAvatar) {
+                profileAvatar.innerHTML = `
+                    <img src="${downloadURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <label class="avatar-upload">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" accept="image/*" id="avatarUpload">
+                    </label>
+                `;
+            }
+
+            alert('Profile picture updated successfully!');
+
+        } catch (error) {
+            console.error('Detailed error:', error); // More detailed error logging
+            alert(`Error uploading profile picture: ${error.message}`);
+            
+            // Restore original icon if there's an error
+            const avatarIcon = document.querySelector('.profile-avatar i');
+            if (avatarIcon && originalIcon) {
+                avatarIcon.className = originalIcon;
+            }
+        }
+    }
+});
+
+// Add this function to load profile picture when user logs in
+function loadProfilePicture(user) {
+    const profileAvatar = document.querySelector('.profile-avatar');
+    if (user.photoURL) {
+        profileAvatar.innerHTML = `
+            <img src="${user.photoURL}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <label class="avatar-upload">
+                <i class="fas fa-camera"></i>
+                <input type="file" accept="image/*" id="avatarUpload">
+            </label>
+        `;
+    } else {
+        profileAvatar.innerHTML = `
+            <i class="fas fa-user-circle fa-3x"></i>
+            <label class="avatar-upload">
+                <i class="fas fa-camera"></i>
+                <input type="file" accept="image/*" id="avatarUpload">
+            </label>
+        `;
+    }
+}
