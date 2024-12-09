@@ -725,7 +725,6 @@ document.addEventListener('click', async function(event) {
         const newText = commentContent.querySelector('.edit-input').value.trim();
         const commentId = commentDiv.dataset.commentId;
 
-        console.log('Save clicked, commentId:', commentId); // Debug log
 
         if (newText) {
             try {
@@ -748,11 +747,10 @@ document.addEventListener('click', async function(event) {
                 // Show comment actions
                 commentContent.querySelector('.comment-actions').style.display = 'flex';
 
-                console.log('Comment updated successfully'); // Debug log
 
             } catch (error) {
                 console.error("Error updating comment: ", error);
-                alert('Error updating comment. Please try again.');
+                alert('Error updating comment. Please check your internet connection.');
             }
         }
     }
@@ -832,13 +830,11 @@ document.addEventListener('change', async function(event) {
                 contentType: file.type,
             };
             
-            console.log('Starting upload...'); // Debug log
             const uploadTask = await uploadBytes(storageRef, file, metadata);
-            console.log('Upload successful:', uploadTask);
+
 
             // Get the download URL
             const downloadURL = await getDownloadURL(storageRef);
-            console.log('Download URL:', downloadURL);
 
             // Update user's profile
             await updateProfile(user, {
